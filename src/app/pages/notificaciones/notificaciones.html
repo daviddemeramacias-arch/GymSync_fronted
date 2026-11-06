@@ -1,0 +1,14 @@
+<div class="page">
+  <h2>Notificaciones</h2>
+  <input [(ngModel)]="form.gym_id" placeholder="Gym ID" />
+  <select [(ngModel)]="form.channel"><option>WHATSAPP</option><option>EMAIL</option><option>PUSH</option></select>
+  <input [(ngModel)]="form.type" placeholder="Tipo" />
+  <textarea [(ngModel)]="form.content" placeholder="Contenido"></textarea>
+  <button (click)="send()">Enviar</button>
+  <button (click)="load()">Cargar logs</button>
+  <table>
+    <tr><th>Canal</th><th>Tipo</th><th>Estado</th><th>Fecha</th></tr>
+    <tr *ngFor="let n of notifs"><td>{{n.channel}}</td><td>{{n.type}}</td><td>{{n.status}}</td><td>{{n.created_at}}</td></tr>
+  </table>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>

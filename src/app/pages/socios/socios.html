@@ -1,0 +1,21 @@
+<div class="page">
+  <h2>Socios y Membresías</h2>
+  <div class="forms">
+    <div class="card">
+      <h3>Crear plan</h3>
+      <input [(ngModel)]="plan.name" placeholder="Nombre plan" />
+      <input [(ngModel)]="plan.price" type="number" placeholder="Precio" />
+      <input [(ngModel)]="plan.duration_days" type="number" placeholder="Días" />
+      <input [(ngModel)]="plan.gym_id" placeholder="Gym ID" />
+      <button (click)="createPlan()">Crear plan</button>
+    </div>
+    <div class="card">
+      <h3>Asignar membresía</h3>
+      <input [(ngModel)]="mem.user_id" placeholder="User ID" />
+      <input [(ngModel)]="mem.plan_id" placeholder="Plan ID" />
+      <input [(ngModel)]="mem.gym_id" placeholder="Gym ID" />
+      <button (click)="assign()">Asignar</button>
+    </div>
+  </div>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>

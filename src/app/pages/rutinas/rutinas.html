@@ -1,0 +1,19 @@
+<div class="page">
+  <h2>Rutinas</h2>
+  <input [(ngModel)]="routine.name" placeholder="Nombre rutina" />
+  <input [(ngModel)]="routine.gym_id" placeholder="Gym ID" />
+  <button (click)="create()">Crear rutina</button>
+  <button (click)="load()">Cargar</button>
+  <ul><li *ngFor="let r of routines">{{r.name}} ({{r.id}})</li></ul>
+
+  <h3>Bitácora</h3>
+  <input [(ngModel)]="log.user_id" placeholder="User ID" />
+  <input [(ngModel)]="log.exercise" placeholder="Ejercicio" />
+  <input [(ngModel)]="log.weight" type="number" placeholder="Peso" />
+  <button (click)="addLog()">Registrar</button>
+
+  <h3>Sugerencia</h3>
+  <input [(ngModel)]="sugUser" placeholder="User ID" />
+  <button (click)="suggest()">Sugerir</button>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>

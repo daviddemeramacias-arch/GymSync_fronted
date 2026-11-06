@@ -1,0 +1,15 @@
+<div class="page">
+  <h2>Pagos</h2>
+  <button (click)="load()">Cargar pendientes</button>
+  <table>
+    <tr><th>ID</th><th>User</th><th>Monto</th><th>Método</th><th>Estado</th><th>Acción</th></tr>
+    <tr *ngFor="let p of payments">
+      <td>{{p.id?.slice(0,6)}}</td><td>{{p.user_id?.slice(0,6)}}</td><td>{{p.amount}}</td><td>{{p.method}}</td><td>{{p.status}}</td>
+      <td>
+        <button (click)="approve(p.id)">✅</button>
+        <button (click)="reject(p.id)">❌</button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>

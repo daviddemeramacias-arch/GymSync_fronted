@@ -1,0 +1,25 @@
+<div class="page">
+  <h2>Marketplace</h2>
+  <div class="forms">
+    <div class="card">
+      <h3>Nuevo producto</h3>
+      <input [(ngModel)]="prod.name" placeholder="Nombre" />
+      <input [(ngModel)]="prod.category" placeholder="Categoría" />
+      <input [(ngModel)]="prod.price" type="number" placeholder="Precio" />
+      <input [(ngModel)]="prod.stock" type="number" placeholder="Stock" />
+      <input [(ngModel)]="prod.gym_id" placeholder="Gym ID" />
+      <button (click)="create()">Crear</button>
+    </div>
+  </div>
+  <button (click)="load()">Cargar productos</button>
+  <table>
+    <tr><th>Nombre</th><th>Precio</th><th>Stock</th></tr>
+    <tr *ngFor="let p of products"><td>{{p.name}}</td><td>{{p.price}}</td><td>{{p.stock}}</td></tr>
+  </table>
+  <h3>Comprar producto (genera token pickup)</h3>
+  <input [(ngModel)]="order.product_id" placeholder="Product ID" />
+  <input [(ngModel)]="order.user_id" placeholder="User ID" />
+  <input [(ngModel)]="order.gym_id" placeholder="Gym ID" />
+  <button (click)="orderProduct()">Comprar</button>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>
