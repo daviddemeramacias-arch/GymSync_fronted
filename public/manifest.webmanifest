@@ -1,0 +1,9 @@
+{
+  "name": "GymSync Admin",
+  "short_name": "GymSync",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#4C5E51",
+  "theme_color": "#F4806A",
+  "icons": [ { "src": "favicon.ico", "sizes": "48x48", "type": "image/x-icon" } ]
+}
