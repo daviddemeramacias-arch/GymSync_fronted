@@ -2,6 +2,14 @@
   <h2>Socios y Membresías</h2>
   <div class="forms">
     <div class="card">
+      <h3>Crear socio</h3>
+      <input [(ngModel)]="user.first_name" placeholder="Nombre" />
+      <input [(ngModel)]="user.last_name" placeholder="Apellido" />
+      <input [(ngModel)]="user.phone" placeholder="Teléfono" />
+      <input [(ngModel)]="user.gym_id" placeholder="Gym ID" />
+      <button (click)="createUser()">Crear socio</button>
+    </div>
+    <div class="card">
       <h3>Crear plan</h3>
       <input [(ngModel)]="plan.name" placeholder="Nombre plan" />
       <input [(ngModel)]="plan.price" type="number" placeholder="Precio" />

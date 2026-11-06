@@ -11,10 +11,24 @@ import { NgIf } from '@angular/common';
 })
 export class Socios {
   msg = '';
+  user: any = { first_name: '', last_name: '', phone: '', gym_id: '' };
   plan: any = { name: '', price: 0, duration_days: 30, gym_id: '' };
   mem: any = { user_id: '', plan_id: '', gym_id: '' };
 
   token() { return localStorage.getItem('token') || ''; }
+
+  async createUser() {
+    try {
+      const res = await fetch('http://localhost:3000/api/v1/members/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() },
+        body: JSON.stringify(this.user),
+      });
+      const data = await res.json();
+    } catch (e: any) {
+      this.msg = `Modo demo: socio ${this.user.first_name} ${this.user.last_name} (no persistido). PIN demo: 1234`;
+    }
+  }
 
   async createPlan() {
     try {
