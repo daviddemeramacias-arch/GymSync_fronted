@@ -1,0 +1,10 @@
+<div class="login-card">
+  <h1>GymSync Admin</h1>
+  <p class="sub">Ingrese con PIN inicial (4 dígitos)</p>
+  <label>Teléfono</label>
+  <input [(ngModel)]="phone" placeholder="+593..." />
+  <label>PIN</label>
+  <input [(ngModel)]="pin" type="password" maxlength="4" />
+  <button (click)="login()">Ingresar</button>
+  <p *ngIf="msg" class="msg">{{msg}}</p>
+</div>

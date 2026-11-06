@@ -1,0 +1,8 @@
+:host{display:grid;place-items:center;min-height:100vh;background:#4C5E51}
+.login-card{background:#fff;padding:28px;border-radius:14px;width:320px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.login-card h1{margin:0 0 4px;color:#4C5E51}
+.sub{color:#475569;font-size:13px;margin:0 0 12px}
+label{display:block;font-size:13px;margin:8px 0 4px;color:#334155}
+input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;box-sizing:border-box}
+button{width:100%;margin-top:14px;padding:10px;background:#F4806A;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+.msg{margin-top:10px;font-size:13px;color:#475569}
