@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +11,7 @@ import { NgIf } from '@angular/common';
   styleUrl: './login.scss',
 })
 export class Login {
+  constructor(private router: Router) {}
   phone = '';
   pin = '';
   msg = '';
@@ -24,12 +26,14 @@ export class Login {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Error de login');
       localStorage.setItem('token', data.token);
-      this.msg = '¡Login OK! Bienvenido ' + data.user?.first_name;
+      this.msg = 'Login OK! Bienvenido ' + (data.user?.first_name || '');
+      window.open('http://localhost:5173/preview.html', '_blank');
+      this.router.navigate(['/socios']);
     } catch (e: any) {
-      // Modo demo cuando no hay backend disponible
       localStorage.setItem('token', 'demo-token');
       this.msg = 'Modo demo (backend no disponible).';
-      window.location.href = '/socios';
+      window.open('http://localhost:5173/preview.html', '_blank');
+      this.router.navigate(['/socios']);
     }
   }
 }
