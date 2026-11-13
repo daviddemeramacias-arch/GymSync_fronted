@@ -1,19 +1,118 @@
 <div class="page">
-  <h2>Rutinas</h2>
-  <input [(ngModel)]="routine.name" placeholder="Nombre rutina" />
-  <input [(ngModel)]="routine.gym_id" placeholder="Gym ID" />
-  <button (click)="create()">Crear rutina</button>
-  <button (click)="load()">Cargar</button>
-  <ul><li *ngFor="let r of routines">{{r.name}} ({{r.id}})</li></ul>
+  <div class="grid two">
+    <div class="card">
+      <h2>Nueva rutina</h2>
 
-  <h3>Bitácora</h3>
-  <input [(ngModel)]="log.user_id" placeholder="User ID" />
-  <input [(ngModel)]="log.exercise" placeholder="Ejercicio" />
-  <input [(ngModel)]="log.weight" type="number" placeholder="Peso" />
-  <button (click)="addLog()">Registrar</button>
+      <label for="rname">Nombre</label>
+      <input id="rname" [(ngModel)]="routine.name" placeholder="Fuerza — tren inferior" />
 
-  <h3>Sugerencia</h3>
-  <input [(ngModel)]="sugUser" placeholder="User ID" />
-  <button (click)="suggest()">Sugerir</button>
-  <p *ngIf="msg" class="msg">{{msg}}</p>
+      <label for="rdesc">Descripción</label>
+      <input id="rdesc" [(ngModel)]="routine.description" placeholder="Sentadilla, prensa, peso muerto…" />
+
+      <div class="form-row">
+        <div>
+          <label for="rdiff">Dificultad</label>
+          <select id="rdiff" [(ngModel)]="routine.difficulty">
+            <option *ngFor="let d of difficulties" [value]="d">{{ difficultyLabel(d) }}</option>
+          </select>
+        </div>
+        <div>
+          <label for="rweeks">Semanas</label>
+          <input id="rweeks" [(ngModel)]="routine.duration_weeks" type="number" min="1" />
+        </div>
+      </div>
+
+      <label for="rgym">Gym ID</label>
+      <input id="rgym" [(ngModel)]="routine.gym_id" class="mono" />
+
+      <div class="actions">
+        <button class="btn" (click)="create()">Crear rutina</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Asignar a un socio</h2>
+
+      <label for="aroutine">Rutina</label>
+      <select id="aroutine" [(ngModel)]="assign.routine_id">
+        <option value="">Seleccioná una rutina</option>
+        <option *ngFor="let r of routines" [value]="r.id">{{ r.name }}</option>
+      </select>
+
+      <label for="auser">User ID del socio</label>
+      <input id="auser" [(ngModel)]="assign.user_id" class="mono" placeholder="uuid del socio" />
+
+      <div class="actions">
+        <button class="btn secondary" (click)="assignRoutine()">Asignar rutina</button>
+      </div>
+
+      <h3 class="sub-title">Sugerencia inteligente</h3>
+      <div class="form-row">
+        <div>
+          <label for="suser">User ID</label>
+          <input id="suser" [(ngModel)]="sugUser" class="mono" placeholder="uuid del socio" />
+        </div>
+        <button class="btn ghost" (click)="suggest()">Sugerir +5%</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <h2>Rutinas del gimnasio</h2>
+      <button class="btn ghost sm" (click)="load()" [disabled]="loading">
+        {{ loading ? 'Cargando…' : 'Actualizar' }}
+      </button>
+    </div>
+
+    <div class="empty" *ngIf="!routines.length && !loading">
+      <strong>Sin rutinas cargadas</strong>
+      Creá la primera rutina para tus socios.
+    </div>
+
+    <div class="table-wrap" *ngIf="routines.length">
+      <table>
+        <thead>
+          <tr><th>Rutina</th><th>Dificultad</th><th>Semanas</th><th>ID</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of routines">
+            <td>{{ r.name }}</td>
+            <td><span class="badge info">{{ difficultyLabel(r.difficulty) }}</span></td>
+            <td>{{ r.duration_weeks ?? 4 }}</td>
+            <td class="mono">{{ short(r.id) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Registrar progreso (bitácora)</h2>
+    <div class="form-row">
+      <div>
+        <label for="luser">User ID</label>
+        <input id="luser" [(ngModel)]="log.user_id" class="mono" />
+      </div>
+      <div>
+        <label for="lex">Ejercicio</label>
+        <input id="lex" [(ngModel)]="log.exercise" placeholder="Sentadilla" />
+      </div>
+      <div>
+        <label for="lsets">Series</label>
+        <input id="lsets" [(ngModel)]="log.sets" type="number" min="1" />
+      </div>
+      <div>
+        <label for="lreps">Reps</label>
+        <input id="lreps" [(ngModel)]="log.reps" type="number" min="1" />
+      </div>
+      <div>
+        <label for="lw">Peso (kg)</label>
+        <input id="lw" [(ngModel)]="log.weight" type="number" min="0" step="0.5" />
+      </div>
+      <button class="btn" (click)="addLog()">Registrar</button>
+    </div>
+
+    <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
+  </div>
 </div>

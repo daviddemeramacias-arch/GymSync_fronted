@@ -1,0 +1,70 @@
+<div class="page">
+  <div class="grid two">
+    <div class="card">
+      <div class="head">
+        <h2>Validar ingreso</h2>
+        <span class="badge info">QR · PIN · biométrico</span>
+      </div>
+      <p class="muted help">
+        Escaneá el QR del socio desde la app, o pegá el contenido del pase / su código de 4 dígitos.
+      </p>
+
+      <label for="method">Método</label>
+      <select id="method" [(ngModel)]="method">
+        <option value="QR">QR</option>
+        <option value="PIN">PIN de 4 dígitos</option>
+        <option value="BIOMETRIC">Biométrico</option>
+        <option value="MANUAL">Manual</option>
+      </select>
+
+      <label for="raw">Código o contenido del QR</label>
+      <input id="raw" [(ngModel)]="raw" placeholder="gymsync://access?user_id=…  ·  4821" (keyup.enter)="validate()" />
+
+      <div class="actions">
+        <button class="btn" (click)="validate()" [disabled]="validating">
+          {{ validating ? 'Validando…' : 'Validar acceso' }}
+        </button>
+        <button class="btn secondary" (click)="scanning ? stopScan() : startScan()">
+          {{ scanning ? 'Detener cámara' : 'Escanear con cámara' }}
+        </button>
+        <button class="btn ghost" (click)="clear()">Limpiar</button>
+      </div>
+
+      <div class="scanner" *ngIf="scanning">
+        <video #video playsinline muted></video>
+        <small>Apuntá al QR del socio…</small>
+      </div>
+
+      <p class="banner error" *ngIf="msg">{{ msg }}</p>
+
+      <div class="result" *ngIf="result" [class.granted]="result.result === 'GRANTED'" [class.denied]="result.result !== 'GRANTED'">
+        <span class="light"></span>
+        <div>
+          <strong>{{ result.result === 'GRANTED' ? 'ACCESO AUTORIZADO' : 'ACCESO DENEGADO' }}</strong>
+          <small *ngIf="result.user_id">Socio: {{ result.user_id }}</small>
+          <small *ngIf="result.token_type">Tipo de pase: {{ result.token_type }}</small>
+          <small *ngIf="result.reason">{{ result.reason }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card aforo">
+      <div class="head">
+        <h2>Aforo de hoy</h2>
+        <span class="badge info">en vivo</span>
+      </div>
+      <div class="aforo-num">{{ aforo ?? '—' }}</div>
+      <p class="muted">Ingresos autorizados registrados hoy.</p>
+      <button class="btn ghost sm" (click)="loadAforo()">Actualizar aforo</button>
+
+      <div class="tips">
+        <h3>Buenas prácticas</h3>
+        <ul>
+          <li>Cada QR es de un solo uso.</li>
+          <li>Los pases de pickup se canjean en mostrador.</li>
+          <li>Si el socio no tiene membresía activa, el semáforo queda en rojo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

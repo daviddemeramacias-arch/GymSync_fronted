@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="GymSync">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4C5E51"/>
+      <stop offset="1" stop-color="#437F91"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <rect x="120" y="228" width="272" height="56" rx="18" fill="#F4806A"/>
+  <rect x="88" y="196" width="48" height="120" rx="16" fill="#D1B174"/>
+  <rect x="376" y="196" width="48" height="120" rx="16" fill="#D1B174"/>
+  <text x="256" y="160" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="700" fill="#ffffff">GS</text>
+</svg>

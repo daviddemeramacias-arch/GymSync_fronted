@@ -24,6 +24,11 @@ export class ApiService {
   createPlan(plan: any) {
     return this.http.post<any>(`${this.base}/members/plans`, plan);
   }
+  plans(gymId?: string) {
+    return this.http.get<any>(`${this.base}/members/plans`, {
+      params: this.params({ gym_id: gymId }),
+    });
+  }
   assignMembership(mem: any) {
     return this.http.post<any>(`${this.base}/members/memberships`, mem);
   }
@@ -68,6 +73,9 @@ export class ApiService {
   addRoutineLog(log: any) {
     return this.http.post<any>(`${this.base}/routines/logs`, log);
   }
+  assignRoutine(routineId: string, userId: string) {
+    return this.http.post<any>(`${this.base}/routines/routines/${routineId}/assign`, { user_id: userId });
+  }
   routineSuggestion(userId: string) {
     return this.http.get<any>(`${this.base}/routines/suggestions`, {
       params: this.params({ user_id: userId }),
@@ -81,6 +89,33 @@ export class ApiService {
   notificationLogs(gymId?: string) {
     return this.http.get<any>(`${this.base}/notifications/logs`, {
       params: this.params({ gym_id: gymId }),
+    });
+  }
+
+  // ── M4: Accesos ─────────────────────────────────────────────────
+  aforo(gymId?: string) {
+    return this.http.get<any>(`${this.base}/access/aforo`, {
+      params: this.params({ gym_id: gymId }),
+    });
+  }
+  validateAccess(body: {
+    gym_id: string;
+    method: 'QR' | 'PIN' | 'BIOMETRIC' | 'MANUAL';
+    code_4digit?: string;
+    user_id?: string;
+  }) {
+    return this.http.post<any>(`${this.base}/access/validate`, body);
+  }
+
+  // ── M9: Métricas ────────────────────────────────────────────────
+  kpis(gymId?: string) {
+    return this.http.get<any>(`${this.base}/metrics/kpis`, {
+      params: this.params({ gym_id: gymId }),
+    });
+  }
+  arqueo(gymId?: string, date?: string) {
+    return this.http.get<any>(`${this.base}/metrics/arqueo`, {
+      params: this.params({ gym_id: gymId, date }),
     });
   }
 

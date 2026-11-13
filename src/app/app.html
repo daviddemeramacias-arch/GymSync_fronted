@@ -1,8 +1,48 @@
-<nav class="topnav">
-  <a routerLink="/socios" routerLinkActive="active">Socios</a>
-  <a routerLink="/pagos" routerLinkActive="active">Pagos</a>
-  <a routerLink="/marketplace" routerLinkActive="active">Marketplace</a>
-  <a routerLink="/rutinas" routerLinkActive="active">Rutinas</a>
-  <a routerLink="/notificaciones" routerLinkActive="active">Notificaciones</a>
-</nav>
-<router-outlet />
+<div class="shell" [class.bare]="!showShell">
+  <aside class="sidebar" *ngIf="showShell">
+    <div class="brand">
+      <span class="brand-mark">GS</span>
+      <div class="brand-text">
+        <strong>GymSync</strong>
+        <small>Panel del dueño</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active"><span class="ico">📊</span> Dashboard</a>
+      <a routerLink="/socios" routerLinkActive="active"><span class="ico">👥</span> Socios</a>
+      <a routerLink="/acceso" routerLinkActive="active"><span class="ico">🚦</span> Accesos</a>
+      <a routerLink="/pagos" routerLinkActive="active"><span class="ico">💳</span> Pagos</a>
+      <a routerLink="/marketplace" routerLinkActive="active"><span class="ico">🛒</span> Marketplace</a>
+      <a routerLink="/rutinas" routerLinkActive="active"><span class="ico">🏋️</span> Rutinas</a>
+      <a routerLink="/notificaciones" routerLinkActive="active"><span class="ico">🔔</span> Notificaciones</a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="who">
+        <span class="avatar">{{ initials }}</span>
+        <div class="who-text">
+          <strong>{{ userName }}</strong>
+          <small>{{ roleLabel }}</small>
+        </div>
+      </div>
+      <button class="btn ghost sm block" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar" *ngIf="showShell">
+      <div>
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ today }}</p>
+      </div>
+      <div class="top-actions">
+        <span class="pill">Gym {{ gymId }}</span>
+      </div>
+    </header>
+
+    <div class="content">
+      <router-outlet />
+    </div>
+  </main>
+</div>

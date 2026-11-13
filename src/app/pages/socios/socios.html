@@ -1,29 +1,79 @@
 <div class="page">
-  <h2>Socios y Membresías</h2>
-  <div class="forms">
+  <div class="grid two">
     <div class="card">
-      <h3>Crear socio</h3>
-      <input [(ngModel)]="user.first_name" placeholder="Nombre" />
-      <input [(ngModel)]="user.last_name" placeholder="Apellido" />
-      <input [(ngModel)]="user.phone" placeholder="Teléfono" />
-      <input [(ngModel)]="user.gym_id" placeholder="Gym ID" />
-      <button (click)="createUser()">Crear socio</button>
+      <h2>Alta de socio</h2>
+      <p class="muted">Se crea el usuario y se genera un PIN inicial de acceso.</p>
+
+      <label for="fn">Nombre</label>
+      <input id="fn" [(ngModel)]="user.first_name" placeholder="Ana" />
+
+      <label for="ln">Apellido</label>
+      <input id="ln" [(ngModel)]="user.last_name" placeholder="Torres" />
+
+      <label for="ph">Teléfono</label>
+      <input id="ph" [(ngModel)]="user.phone" placeholder="+593999999999" />
+
+      <label for="em">Email (opcional)</label>
+      <input id="em" [(ngModel)]="user.email" type="email" placeholder="ana@correo.com" />
+
+      <label for="gy">Gym ID</label>
+      <input id="gy" [(ngModel)]="user.gym_id" class="mono" />
+
+      <div class="actions">
+        <button class="btn" (click)="createUser()">Crear socio</button>
+      </div>
     </div>
+
     <div class="card">
-      <h3>Crear plan</h3>
-      <input [(ngModel)]="plan.name" placeholder="Nombre plan" />
-      <input [(ngModel)]="plan.price" type="number" placeholder="Precio" />
-      <input [(ngModel)]="plan.duration_days" type="number" placeholder="Días" />
-      <input [(ngModel)]="plan.gym_id" placeholder="Gym ID" />
-      <button (click)="createPlan()">Crear plan</button>
-    </div>
-    <div class="card">
-      <h3>Asignar membresía</h3>
-      <input [(ngModel)]="mem.user_id" placeholder="User ID" />
-      <input [(ngModel)]="mem.plan_id" placeholder="Plan ID" />
-      <input [(ngModel)]="mem.gym_id" placeholder="Gym ID" />
-      <button (click)="assign()">Asignar</button>
+      <h2>Nuevo plan</h2>
+      <p class="muted">Definí precio y duración de la membresía.</p>
+
+      <label for="pn">Nombre del plan</label>
+      <input id="pn" [(ngModel)]="plan.name" placeholder="Mensual full" />
+
+      <label for="pd">Descripción</label>
+      <input id="pd" [(ngModel)]="plan.description" placeholder="Acceso libre + rutina" />
+
+      <label for="pp">Precio (USD)</label>
+      <input id="pp" [(ngModel)]="plan.price" type="number" min="0" step="0.5" />
+
+      <label for="pdu">Duración (días)</label>
+      <input id="pdu" [(ngModel)]="plan.duration_days" type="number" min="1" />
+
+      <label for="pg">Gym ID</label>
+      <input id="pg" [(ngModel)]="plan.gym_id" class="mono" />
+
+      <div class="actions">
+        <button class="btn secondary" (click)="createPlan()">Crear plan</button>
+      </div>
     </div>
   </div>
-  <p *ngIf="msg" class="msg">{{msg}}</p>
+
+  <div class="card">
+    <div class="head">
+      <h2>Asignar membresía</h2>
+      <span class="badge info">{{ plans.length }} planes disponibles</span>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="mu">User ID del socio</label>
+        <input id="mu" [(ngModel)]="mem.user_id" class="mono" placeholder="uuid del socio" />
+      </div>
+      <div>
+        <label for="mp">Plan</label>
+        <select id="mp" [(ngModel)]="mem.plan_id">
+          <option value="">Seleccioná un plan</option>
+          <option *ngFor="let p of plans" [value]="p.id">{{ p.name }} · ${{ p.price }}</option>
+        </select>
+      </div>
+      <div>
+        <label for="mg">Gym ID</label>
+        <input id="mg" [(ngModel)]="mem.gym_id" class="mono" />
+      </div>
+      <button class="btn" (click)="assign()">Asignar</button>
+    </div>
+
+    <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
+  </div>
 </div>

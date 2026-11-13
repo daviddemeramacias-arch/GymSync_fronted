@@ -1,7 +1,12 @@
-:host{display:block;padding:20px}
-h2{color:#4C5E51}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-th,td{padding:10px;border-bottom:1px solid #e2e8f0;font-size:14px}
-th{color:#4C5E51}
-button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;margin:0 2px}
-.msg{margin-top:12px;color:#475569}
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  h2 { margin: 0 0 3px; }
+  p { margin: 0; font-size: 12.5px; }
+}
+
+.row-actions { display: flex; gap: 6px; }

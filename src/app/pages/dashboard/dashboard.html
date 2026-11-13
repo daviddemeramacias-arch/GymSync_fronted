@@ -1,0 +1,97 @@
+<div class="page">
+  <div class="banner" *ngIf="offline">
+    <strong>Sin conexión con la API.</strong> Mostrando datos de ejemplo.
+    <span class="mono"> {{ msg }}</span>
+  </div>
+
+  <div class="grid kpi">
+    <div class="kpi-card">
+      <span class="kpi-ico">👥</span>
+      <div>
+        <small>Socios totales</small>
+        <strong>{{ kpis.users ?? '—' }}</strong>
+        <em>registrados en el gym</em>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-ico teal">🎟️</span>
+      <div>
+        <small>Membresías activas</small>
+        <strong>{{ kpis.active_memberships ?? '—' }}</strong>
+        <em>con acceso habilitado</em>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-ico wheat">💵</span>
+      <div>
+        <small>Ingresos del mes</small>
+        <strong>{{ money(kpis.revenue_month) }}</strong>
+        <em>pagos aprobados</em>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-ico coral">⏳</span>
+      <div>
+        <small>Pagos pendientes</small>
+        <strong>{{ kpis.pending_payments ?? '—' }}</strong>
+        <em>esperando revisión</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card aforo-card">
+      <div class="card-head">
+        <h2>Aforo de hoy</h2>
+        <span class="badge info">en vivo</span>
+      </div>
+      <div class="aforo-value">{{ aforo ?? '—' }}</div>
+      <p class="muted">Ingresos autorizados registrados hoy en la sede.</p>
+      <a class="btn secondary sm" routerLink="/acceso">Abrir control de acceso</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Pagos por revisar</h2>
+        <a class="link" routerLink="/pagos">Ver todos</a>
+      </div>
+
+      <div class="empty" *ngIf="!pending.length">
+        <strong>Todo al día</strong>
+        No hay pagos pendientes de revisión.
+      </div>
+
+      <div class="table-wrap" *ngIf="pending.length">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Socio</th><th>Monto</th><th>Método</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of pending">
+              <td class="mono">{{ short(p.id) }}</td>
+              <td class="mono">{{ short(p.user_id) }}</td>
+              <td>{{ money(p.amount) }}</td>
+              <td>{{ p.method }}</td>
+              <td><span class="badge" [ngClass]="statusClass(p.status)">{{ p.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Accesos rápidos</h2>
+    <div class="quick">
+      <a routerLink="/socios"><span>👥</span><strong>Alta de socio</strong><small>Crear usuario, plan y membresía</small></a>
+      <a routerLink="/pagos"><span>💳</span><strong>Revisar pagos</strong><small>Aprobar o rechazar comprobantes</small></a>
+      <a routerLink="/marketplace"><span>🛒</span><strong>Marketplace</strong><small>Productos y pedidos con pickup</small></a>
+      <a routerLink="/rutinas"><span>🏋️</span><strong>Rutinas</strong><small>Planes de entrenamiento</small></a>
+      <a routerLink="/notificaciones"><span>🔔</span><strong>Notificaciones</strong><small>Avisos a socios</small></a>
+      <a routerLink="/acceso"><span>🚦</span><strong>Control de acceso</strong><small>Validar QR y aforo</small></a>
+    </div>
+  </div>
+</div>

@@ -1,15 +1,41 @@
 <div class="page">
-  <h2>Pagos</h2>
-  <button (click)="load()">Cargar pendientes</button>
-  <table>
-    <tr><th>ID</th><th>User</th><th>Monto</th><th>Método</th><th>Estado</th><th>Acción</th></tr>
-    <tr *ngFor="let p of payments">
-      <td>{{p.id?.slice(0,6)}}</td><td>{{p.user_id?.slice(0,6)}}</td><td>{{p.amount}}</td><td>{{p.method}}</td><td>{{p.status}}</td>
-      <td>
-        <button (click)="approve(p.id)">✅</button>
-        <button (click)="reject(p.id)">❌</button>
-      </td>
-    </tr>
-  </table>
-  <p *ngIf="msg" class="msg">{{msg}}</p>
+  <div class="card">
+    <div class="head">
+      <div>
+        <h2>Pagos pendientes</h2>
+        <p class="muted">Comprobantes que esperan aprobación para habilitar la membresía.</p>
+      </div>
+      <button class="btn ghost sm" (click)="load()" [disabled]="loading">
+        {{ loading ? 'Cargando…' : 'Actualizar' }}
+      </button>
+    </div>
+
+    <p class="banner error" *ngIf="msg">{{ msg }}</p>
+
+    <div class="empty" *ngIf="!payments.length && !loading">
+      <strong>Sin pagos pendientes</strong>
+      Todo está aprobado o todavía no hay comprobantes cargados.
+    </div>
+
+    <div class="table-wrap" *ngIf="payments.length">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Socio</th><th>Monto</th><th>Método</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of payments">
+            <td class="mono">{{ short(p.id) }}</td>
+            <td class="mono">{{ short(p.user_id) }}</td>
+            <td>{{ money(p.amount) }}</td>
+            <td>{{ methodLabel(p.method) }}</td>
+            <td><span class="badge warn">{{ p.status }}</span></td>
+            <td class="row-actions">
+              <button class="btn sm" (click)="approve(p.id)">Aprobar</button>
+              <button class="btn sm danger" (click)="reject(p.id)">Rechazar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

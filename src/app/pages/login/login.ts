@@ -26,13 +26,25 @@ export class Login {
     this.msg = '';
     try {
       const data = await firstValueFrom(this.auth.login(this.phone, this.pin));
-      this.auth.setToken(data.token);
-      this.msg = 'Login OK! Bienvenido ' + (data.user?.first_name || '');
-      this.router.navigate(['/socios']);
+      this.auth.setSession(data.token, data.user);
+      this.msg = 'Bienvenido ' + (data.user?.first_name || '');
+      this.router.navigate(['/dashboard']);
     } catch (e: any) {
       this.msg = errorMessage(e);
     } finally {
       this.loading = false;
     }
+  }
+
+  /** Entrada de demostración para revisar la interfaz sin backend levantado. */
+  demo() {
+    this.auth.setSession('demo-session', {
+      id: 'demo-owner',
+      first_name: 'Carlos',
+      last_name: 'Mendoza',
+      role_id: 1,
+      gym_id: '00000000-0000-0000-0000-000000000001',
+    });
+    this.router.navigate(['/dashboard']);
   }
 }

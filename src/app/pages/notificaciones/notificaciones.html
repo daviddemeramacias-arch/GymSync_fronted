@@ -1,14 +1,62 @@
 <div class="page">
-  <h2>Notificaciones</h2>
-  <input [(ngModel)]="form.gym_id" placeholder="Gym ID" />
-  <select [(ngModel)]="form.channel"><option>WHATSAPP</option><option>EMAIL</option><option>PUSH</option></select>
-  <input [(ngModel)]="form.type" placeholder="Tipo" />
-  <textarea [(ngModel)]="form.content" placeholder="Contenido"></textarea>
-  <button (click)="send()">Enviar</button>
-  <button (click)="load()">Cargar logs</button>
-  <table>
-    <tr><th>Canal</th><th>Tipo</th><th>Estado</th><th>Fecha</th></tr>
-    <tr *ngFor="let n of notifs"><td>{{n.channel}}</td><td>{{n.type}}</td><td>{{n.status}}</td><td>{{n.created_at}}</td></tr>
-  </table>
-  <p *ngIf="msg" class="msg">{{msg}}</p>
+  <div class="grid two">
+    <div class="card">
+      <h2>Nuevo envío</h2>
+
+      <label for="nch">Canal</label>
+      <select id="nch" [(ngModel)]="form.channel">
+        <option *ngFor="let c of channels" [value]="c">{{ c }}</option>
+      </select>
+
+      <label for="nty">Tipo</label>
+      <select id="nty" [(ngModel)]="form.type">
+        <option *ngFor="let t of types" [value]="t">{{ typeLabel(t) }}</option>
+      </select>
+
+      <label for="nuser">User ID (opcional)</label>
+      <input id="nuser" [(ngModel)]="form.user_id" class="mono" placeholder="Dejar vacío para envío masivo" />
+
+      <label for="ncontent">Mensaje</label>
+      <textarea id="ncontent" [(ngModel)]="form.content" placeholder="Hola Ana, tu cuota vence en 3 días…"></textarea>
+
+      <label for="ngym">Gym ID</label>
+      <input id="ngym" [(ngModel)]="form.gym_id" class="mono" />
+
+      <div class="actions">
+        <button class="btn" (click)="send()">Enviar notificación</button>
+      </div>
+
+      <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <h2>Historial</h2>
+        <button class="btn ghost sm" (click)="load()" [disabled]="loading">
+          {{ loading ? 'Cargando…' : 'Actualizar' }}
+        </button>
+      </div>
+
+      <div class="empty" *ngIf="!notifs.length && !loading">
+        <strong>Sin envíos</strong>
+        Los mensajes enviados van a aparecer acá.
+      </div>
+
+      <div class="table-wrap" *ngIf="notifs.length">
+        <table>
+          <thead>
+            <tr><th>Canal</th><th>Tipo</th><th>Estado</th><th>Fecha</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let n of notifs">
+              <td>{{ n.channel }}</td>
+              <td>{{ typeLabel(n.type) }}</td>
+              <td><span class="badge" [ngClass]="statusClass(n.status)">{{ n.status }}</span></td>
+              <td class="muted">{{ date(n.created_at) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

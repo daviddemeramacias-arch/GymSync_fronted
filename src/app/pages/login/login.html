@@ -1,10 +1,45 @@
-<div class="login-card">
-  <h1>GymSync Admin</h1>
-  <p class="sub">Ingrese con PIN inicial (4 dígitos)</p>
-  <label>Teléfono</label>
-  <input [(ngModel)]="phone" placeholder="+593..." />
-  <label>PIN</label>
-  <input [(ngModel)]="pin" type="password" maxlength="4" />
-  <button (click)="login()">Ingresar</button>
-  <p *ngIf="msg" class="msg">{{msg}}</p>
+<div class="login-wrap">
+  <section class="login-brand">
+    <div class="logo">GS</div>
+    <h1>GymSync</h1>
+    <p class="tagline">La operación de tu gimnasio,<br />en un solo panel.</p>
+
+    <ul class="bullets">
+      <li>Socios, planes y membresías en tiempo real</li>
+      <li>Pagos con validación y arqueo diario</li>
+      <li>Control de acceso por QR y aforo en vivo</li>
+    </ul>
+
+    <div class="palette" aria-hidden="true">
+      <span style="background:#F4806A"></span>
+      <span style="background:#437F91"></span>
+      <span style="background:#4C5E51"></span>
+      <span style="background:#D1B174"></span>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <div class="login-card">
+      <h2>Ingresar al panel</h2>
+      <p class="sub">Acceso para dueño y personal del gimnasio</p>
+
+      <form (ngSubmit)="login()">
+        <label for="phone">Teléfono</label>
+        <input id="phone" name="phone" [(ngModel)]="phone" placeholder="+593999999999" autocomplete="username" />
+
+        <label for="pin">PIN de 4 dígitos</label>
+        <input id="pin" name="pin" [(ngModel)]="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="current-password" />
+
+        <button class="btn block" type="submit" [disabled]="loading">
+          {{ loading ? 'Ingresando…' : 'Ingresar' }}
+        </button>
+      </form>
+
+      <p class="msg" *ngIf="msg">{{ msg }}</p>
+
+      <div class="divider"><span>o</span></div>
+      <button class="btn ghost block" type="button" (click)="demo()">Ver demo del panel (sin backend)</button>
+      <p class="foot">¿Sos socio? Usá la app GymSync Socio en tu celular.</p>
+    </div>
+  </section>
 </div>

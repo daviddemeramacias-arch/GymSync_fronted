@@ -1,11 +1,11 @@
-:host{display:block;padding:20px}
-h2{color:#4C5E51;margin:0 0 10px}
-.forms{display:grid;grid-template-columns:1fr;gap:16px;max-width:420px}
-.card{background:#fff;padding:16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.card h3{margin:0 0 8px;color:#4C5E51}
-input{width:100%;padding:8px;margin:4px 0;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
-button{margin-top:8px;padding:8px 12px;background:#F4806A;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-top:12px}
-th,td{padding:10px;border-bottom:1px solid #e2e8f0;font-size:14px}
-h3{color:#4C5E51;margin-top:18px}
-.msg{margin-top:12px;color:#475569}
+.card p.muted { margin: 0 0 6px; font-size: 12.5px; }
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  h2 { margin: 0; }
+}
