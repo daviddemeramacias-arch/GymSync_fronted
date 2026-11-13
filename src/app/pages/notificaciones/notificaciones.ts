@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { ApiService, errorMessage } from '../../core/api.service';
 
 @Component({
   selector: 'app-notificaciones',
@@ -9,29 +11,33 @@ import { NgIf, NgFor } from '@angular/common';
   templateUrl: './notificaciones.html',
   styleUrl: './notificaciones.scss',
 })
-export class Notificaciones {
+export class Notificaciones implements OnInit {
   notifs: any[] = [];
   msg = '';
   form: any = { gym_id: '', channel: 'WHATSAPP', type: 'CUSTOM', content: '', user_id: '' };
-  token() { return localStorage.getItem('token') || ''; }
-  base = 'http://localhost:3000/api/v1';
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit() {
+    this.load();
+  }
 
   async send() {
     try {
-      const res = await fetch(`${this.base}/notifications/send`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() }, body: JSON.stringify(this.form) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      await firstValueFrom(this.api.sendNotification(this.form));
       this.msg = 'Notificación enviada (mock)';
       await this.load();
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async load() {
     try {
-      const res = await fetch(`${this.base}/notifications/logs?gym_id=${this.form.gym_id || ''}`, { headers: { Authorization: 'Bearer ' + this.token() } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.notificationLogs(this.form.gym_id));
       this.notifs = data.notifications || [];
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 }

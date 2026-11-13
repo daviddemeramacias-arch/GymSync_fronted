@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
+import { errorMessage } from '../../core/api.service';
 
 @Component({
   selector: 'app-login',
@@ -16,19 +18,21 @@ export class Login {
   phone = '';
   pin = '';
   msg = '';
+  loading = false;
 
   async login() {
+    if (this.loading) return;
+    this.loading = true;
+    this.msg = '';
     try {
-      const data = await this.auth.login(this.phone, this.pin).toPromise();
+      const data = await firstValueFrom(this.auth.login(this.phone, this.pin));
       this.auth.setToken(data.token);
       this.msg = 'Login OK! Bienvenido ' + (data.user?.first_name || '');
-      window.open('http://localhost:5173/preview.html', '_blank');
       this.router.navigate(['/socios']);
     } catch (e: any) {
-      this.auth.setToken('demo-token');
-      this.msg = 'Modo demo (backend no disponible).';
-      window.open('http://localhost:5173/preview.html', '_blank');
-      this.router.navigate(['/socios']);
+      this.msg = errorMessage(e);
+    } finally {
+      this.loading = false;
     }
   }
 }

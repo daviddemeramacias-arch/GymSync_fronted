@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { ApiService, errorMessage } from '../../core/api.service';
 
 @Component({
   selector: 'app-pagos',
@@ -8,33 +10,42 @@ import { NgIf, NgFor } from '@angular/common';
   templateUrl: './pagos.html',
   styleUrl: './pagos.scss',
 })
-export class Pagos {
+export class Pagos implements OnInit {
   payments: any[] = [];
   msg = '';
-  token() { return localStorage.getItem('token') || ''; }
+  gymId = '';
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit() {
+    this.load();
+  }
 
   async load() {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/finance/payments/pending', { headers: { Authorization: 'Bearer ' + this.token() } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.pendingPayments(this.gymId));
       this.payments = data.payments || [];
-    } catch (e: any) { this.msg = e.message; }
+      this.msg = '';
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async approve(id: string) {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/finance/payments/' + id + '/approve', { method: 'PATCH', headers: { Authorization: 'Bearer ' + this.token(), 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
-      if (!res.ok) throw new Error('Error');
+      await firstValueFrom(this.api.approvePayment(id));
       await this.load();
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async reject(id: string) {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/finance/payments/' + id + '/reject', { method: 'PATCH', headers: { Authorization: 'Bearer ' + this.token(), 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'Rechazado por admin' }) });
-      if (!res.ok) throw new Error('Error');
+      await firstValueFrom(this.api.rejectPayment(id, 'Rechazado por admin'));
       await this.load();
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 }

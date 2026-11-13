@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { ApiService, errorMessage } from '../../core/api.service';
 
 @Component({
   selector: 'app-socios',
@@ -15,44 +17,32 @@ export class Socios {
   plan: any = { name: '', price: 0, duration_days: 30, gym_id: '' };
   mem: any = { user_id: '', plan_id: '', gym_id: '' };
 
-  token() { return localStorage.getItem('token') || ''; }
+  constructor(private api: ApiService) {}
 
   async createUser() {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/members/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() },
-        body: JSON.stringify(this.user),
-      });
-      const data = await res.json();
+      const data = await firstValueFrom(this.api.createUser(this.user));
+      this.msg = `Socio creado: ${data.user?.id || ''} — PIN inicial: ${data.pin || ''}`;
     } catch (e: any) {
-      this.msg = `Modo demo: socio ${this.user.first_name} ${this.user.last_name} (no persistido). PIN demo: 1234`;
+      this.msg = errorMessage(e);
     }
   }
 
   async createPlan() {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/members/plans', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() },
-        body: JSON.stringify(this.plan),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.createPlan(this.plan));
       this.msg = 'Plan creado: ' + (data.plan?.id || '');
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async assign() {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/members/memberships', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() },
-        body: JSON.stringify(this.mem),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.assignMembership(this.mem));
       this.msg = 'Membresía creada: ' + (data.membership?.id || '');
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 }

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { ApiService, errorMessage } from '../../core/api.service';
 
 @Component({
   selector: 'app-marketplace',
@@ -9,39 +11,44 @@ import { NgIf, NgFor } from '@angular/common';
   templateUrl: './marketplace.html',
   styleUrl: './marketplace.scss',
 })
-export class Marketplace {
+export class Marketplace implements OnInit {
   products: any[] = [];
   msg = '';
   prod: any = { name: '', category: 'SUPPLEMENT', price: 0, stock: 0, gym_id: '' };
   order: any = { product_id: '', user_id: '', gym_id: '', quantity: 1 };
-  token() { return localStorage.getItem('token') || ''; }
-  base = 'http://localhost:3000/api/v1';
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit() {
+    this.load();
+  }
 
   async load() {
     try {
-      const res = await fetch(`${this.base}/marketplace/products?gym_id=${this.prod.gym_id || ''}`, { headers: { Authorization: 'Bearer ' + this.token() } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.products(this.prod.gym_id));
       this.products = data.products || [];
-    } catch (e: any) { this.msg = e.message; }
+      this.msg = '';
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async create() {
     try {
-      const res = await fetch(`${this.base}/marketplace/products`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() }, body: JSON.stringify(this.prod) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.createProduct(this.prod));
       this.msg = 'Producto creado: ' + (data.product?.id || '');
       await this.load();
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 
   async orderProduct() {
     try {
-      const res = await fetch(`${this.base}/marketplace/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.token() }, body: JSON.stringify(this.order) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Error');
+      const data = await firstValueFrom(this.api.createOrder(this.order));
       this.msg = 'Pedido creado. Token pickup: ' + (data.order?.token || '');
-    } catch (e: any) { this.msg = e.message; }
+    } catch (e: any) {
+      this.msg = errorMessage(e);
+    }
   }
 }
