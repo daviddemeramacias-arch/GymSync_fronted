@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "tokens:transform": "token-transformer ../DESIGN_TOKENS.json tokens/tokens.json",
+    "tokens:build": "npm run tokens:transform && style-dictionary build --config tokens/style-dictionary.config.js",
+    "start": "npm run tokens:build && ng serve",
+    "build": "npm run tokens:build && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -26,6 +28,8 @@
     "@angular/compiler-cli": "^22.2.0",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
+    "style-dictionary": "^4.4.0",
+    "token-transformer": "^0.0.33",
     "typescript": "~6.0.2",
     "vitest": "^5.0.0"
   }

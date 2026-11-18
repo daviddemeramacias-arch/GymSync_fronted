@@ -1,19 +1,13 @@
-/* GymSync Admin — Design system */
+/* GymSync Admin - aliases over generated DESIGN_TOKENS */
 :root {
-  --coral: #F4806A;
   --coral-dark: #e06b55;
-  --teal: #437F91;
-  --moss: #4C5E51;
-  --wheat: #D1B174;
-  --ok: #10B981;
-  --bad: #EF4444;
+  --ok: var(--emerald);
+  --bad: var(--red);
   --warn: #F59E0B;
-  --bg: #F1F5F9;
   --card: #ffffff;
   --text: #0F172A;
   --muted: #64748B;
   --line: #E2E8F0;
-  --radius: 14px;
   --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
 }
 
