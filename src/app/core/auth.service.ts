@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+const LEGACY_GYM_ID = '00000000-0000-0000-0000-000000000001';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   api = 'http://localhost:3000/api/v1';
@@ -11,7 +13,10 @@ export class AuthService {
 
   user(): any {
     try {
-      return JSON.parse(localStorage.getItem('user') || 'null');
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      // Sesiones anteriores al cambio siguen guardando el UUID viejo.
+      if (u && (!u.gym_id || u.gym_id === LEGACY_GYM_ID)) u.gym_id = '001';
+      return u;
     } catch {
       return null;
     }
