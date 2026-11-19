@@ -31,7 +31,7 @@ export class Acceso implements OnInit, OnDestroy {
   private timer?: ReturnType<typeof setInterval>;
 
   constructor(private api: ApiService, private auth: AuthService, private cdr: ChangeDetectorRef) {
-    this.gymId = this.auth.user()?.gym_id || '00000000-0000-0000-0000-000000000001';
+    this.gymId = this.auth.user()?.gym_id || '001';
   }
 
   ngOnInit() {

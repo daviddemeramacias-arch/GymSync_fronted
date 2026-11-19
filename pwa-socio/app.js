@@ -317,7 +317,7 @@
         last_name: 'Torres',
         phone: '+593999000002',
         role_id: 4,
-        gym_id: '00000000-0000-0000-0000-000000000001',
+        gym_id: '001',
       };
       saveSession();
       await refresh();

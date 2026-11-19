@@ -43,7 +43,7 @@ export class Login {
       first_name: 'Carlos',
       last_name: 'Mendoza',
       role_id: 1,
-      gym_id: '00000000-0000-0000-0000-000000000001',
+      gym_id: '001',
     });
     this.router.navigate(['/dashboard']);
   }
