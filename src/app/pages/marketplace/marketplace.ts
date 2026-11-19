@@ -55,7 +55,7 @@ export class Marketplace implements OnInit {
   async loadOrders() {
     this.loadingOrders = true;
     try {
-      const data = await firstValueFrom(this.api.orders(this.order.gym_id));
+      const data = await firstValueFrom(this.api.orders());
       this.orders = data.orders || [];
     } catch (e: any) {
       this.setMsg(errorMessage(e), true);

@@ -18,6 +18,8 @@ export class Socios implements OnInit {
   loading = false;
   plans: any[] = [];
   socios: any[] = [];
+  gyms: any[] = [];
+  nextGymId = '';
 
   user: any = { first_name: '', last_name: '', phone: '', email: '', gym_id: '' };
   plan: any = { name: '', description: '', price: 0, duration_days: 30, gym_id: '' };
@@ -34,7 +36,8 @@ export class Socios implements OnInit {
     this.mem.gym_id = gymId;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.loadGymSequence();
     this.loadPlans();
     this.loadSocios();
   }
@@ -44,9 +47,34 @@ export class Socios implements OnInit {
     this.isError = isError;
   }
 
+  async loadGymSequence() {
+    try {
+      const data = await firstValueFrom(this.api.gyms());
+      this.gyms = data.gyms || [];
+      this.nextGymId = data.next_id || '001';
+      // El alta arranca con el siguiente Gym ID libre, pero se puede editar.
+      this.user.gym_id = this.nextGymId;
+      this.syncGym(this.nextGymId);
+    } catch (e: any) {
+      this.setMsg(errorMessage(e), true);
+    } finally {
+      this.cdr.detectChanges();
+    }
+  }
+
+  syncGym(value: string) {
+    this.plan.gym_id = value;
+    this.mem.gym_id = value;
+  }
+
+  useNextGymId() {
+    this.user.gym_id = this.nextGymId;
+    this.syncGym(this.nextGymId);
+  }
+
   async loadPlans() {
     try {
-      const data = await firstValueFrom(this.api.plans(this.user.gym_id));
+      const data = await firstValueFrom(this.api.plans());
       this.plans = data.plans || [];
     } catch {
       this.plans = [];
@@ -58,7 +86,7 @@ export class Socios implements OnInit {
   async loadSocios() {
     this.loading = true;
     try {
-      const data = await firstValueFrom(this.api.socios(this.user.gym_id));
+      const data = await firstValueFrom(this.api.socios());
       this.socios = data.socios || [];
     } catch (e: any) {
       this.setMsg(errorMessage(e), true);
@@ -74,6 +102,8 @@ export class Socios implements OnInit {
       this.mem.user_id = data.user?.id || '';
       this.setMsg(`Socio creado: ${data.user?.id || ''} - PIN inicial: ${data.pin || ''}`);
       this.user = { first_name: '', last_name: '', phone: '', email: '', gym_id: this.user.gym_id };
+      await this.loadGymSequence();
+      await this.loadPlans();
       await this.loadSocios();
     } catch (e: any) {
       this.setMsg(errorMessage(e), true);

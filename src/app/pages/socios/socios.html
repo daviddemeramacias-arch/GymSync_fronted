@@ -120,7 +120,16 @@
       <input id="em" [(ngModel)]="user.email" type="email" placeholder="ana@correo.com" />
 
       <label for="gy">Gym ID</label>
-      <input id="gy" [(ngModel)]="user.gym_id" class="mono" />
+      <input id="gy" [(ngModel)]="user.gym_id" (ngModelChange)="syncGym($event)"
+             list="gym-ids" class="mono" maxlength="3" placeholder="001" />
+      <datalist id="gym-ids">
+        <option *ngFor="let g of gyms" [value]="g.id">{{ g.name }}</option>
+        <option *ngIf="nextGymId" [value]="nextGymId">Siguiente disponible</option>
+      </datalist>
+      <p class="hint">
+        Siguiente automático: <strong>{{ nextGymId }}</strong>. Puedes escribir otro (001, 002…)
+        <button type="button" class="link" (click)="useNextGymId()">Usar siguiente</button>
+      </p>
 
       <div class="actions">
         <button class="btn" (click)="createUser()">Crear socio</button>
@@ -144,7 +153,7 @@
       <input id="pdu" [(ngModel)]="plan.duration_days" type="number" min="1" />
 
       <label for="pg">Gym ID</label>
-      <input id="pg" [(ngModel)]="plan.gym_id" class="mono" />
+      <input id="pg" [(ngModel)]="plan.gym_id" list="gym-ids" class="mono" maxlength="3" />
 
       <div class="actions">
         <button class="btn secondary" (click)="createPlan()">Crear plan</button>
@@ -172,7 +181,7 @@
       </div>
       <div>
         <label for="mg">Gym ID</label>
-        <input id="mg" [(ngModel)]="mem.gym_id" class="mono" />
+        <input id="mg" [(ngModel)]="mem.gym_id" list="gym-ids" class="mono" maxlength="3" />
       </div>
       <button class="btn" (click)="assign()">Asignar</button>
     </div>

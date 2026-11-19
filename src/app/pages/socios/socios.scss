@@ -30,6 +30,16 @@
   color: var(--moss);
 }
 
+.hint {
+  margin: 6px 0 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted);
+
+  strong { color: var(--moss); }
+  .link { display: inline; margin-left: 4px; }
+}
+
 .link {
   display: block;
   margin-top: 3px;

@@ -37,6 +37,12 @@ export class ApiService {
       params: this.params({ gym_id: gymId }),
     });
   }
+  nextGymId() {
+    return this.http.get<any>(`${this.base}/members/gyms/next-id`);
+  }
+  gyms() {
+    return this.http.get<any>(`${this.base}/members/gyms`);
+  }
   updateUser(id: string, data: any) {
     return this.http.patch<any>(`${this.base}/members/users/${id}`, data);
   }

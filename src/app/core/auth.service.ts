@@ -16,6 +16,7 @@ export class AuthService {
       const u = JSON.parse(localStorage.getItem('user') || 'null');
       // Sesiones anteriores al cambio siguen guardando el UUID viejo.
       if (u && (!u.gym_id || u.gym_id === LEGACY_GYM_ID)) u.gym_id = '001';
+      else if (u && /^\d{1,3}$/.test(u.gym_id)) u.gym_id = u.gym_id.padStart(3, '0');
       return u;
     } catch {
       return null;
