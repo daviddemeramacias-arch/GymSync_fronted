@@ -9,3 +9,37 @@
 
   h2 { margin: 0; }
 }
+
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.nowrap { white-space: nowrap; }
+
+.token {
+  font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #047857;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+@media (max-width: 720px) {
+  .head { align-items: flex-start; flex-direction: column; }
+  .row-actions { flex-direction: column; }
+}

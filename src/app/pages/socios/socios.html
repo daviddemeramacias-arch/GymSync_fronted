@@ -1,4 +1,107 @@
 <div class="page">
+  <div class="card">
+    <div class="head">
+      <div>
+        <h2>Todos los socios</h2>
+        <p class="muted">Usuarios, PIN, plan y Gym ID de este gimnasio.</p>
+      </div>
+      <div class="head-actions">
+        <span class="badge info">{{ socios.length }} {{ socios.length === 1 ? 'socio' : 'socios' }}</span>
+        <button class="btn ghost sm" (click)="loadSocios()" [disabled]="loading">
+          {{ loading ? 'Cargando...' : 'Actualizar' }}
+        </button>
+      </div>
+    </div>
+
+    <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
+
+    <div class="empty" *ngIf="!socios.length && !loading">
+      <strong>Todavía no hay socios</strong>
+      Crea el primero con el formulario “Alta de socio”.
+    </div>
+
+    <div class="table-wrap" *ngIf="socios.length">
+      <table>
+        <thead>
+          <tr>
+            <th>Socio</th>
+            <th>Teléfono</th>
+            <th>PIN</th>
+            <th>Plan</th>
+            <th>Gym ID</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let s of socios">
+            <tr>
+              <td>
+                <strong>{{ s.first_name }} {{ s.last_name }}</strong>
+                <small class="sub" *ngIf="s.email">{{ s.email }}</small>
+              </td>
+              <td class="mono">{{ s.phone }}</td>
+              <td>
+                <span class="pin">{{ pinLabel(s) }}</span>
+                <button class="link" (click)="regeneratePin(s)" title="Generar un PIN nuevo">Nuevo PIN</button>
+              </td>
+              <td>
+                <strong>{{ s.plan_name || 'Sin plan' }}</strong>
+                <small class="sub" *ngIf="s.end_date">Hasta {{ formatDate(s.end_date) }}</small>
+              </td>
+              <td class="mono">{{ s.gym_id }}</td>
+              <td>
+                <span class="badge" [ngClass]="statusClass(s.status)">{{ statusLabel(s.status) }}</span>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="btn ghost sm" (click)="loadSocios()">Actualizar</button>
+                  <button class="btn secondary sm" (click)="openEdit(s)">Editar</button>
+                  <button class="btn danger sm" (click)="deactivate(s)" [disabled]="s.status !== 'ACTIVE'">
+                    Dar de baja
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr class="edit-row" *ngIf="editingId === s.id">
+              <td colspan="7">
+                <div class="edit-grid">
+                  <div>
+                    <label>Nombre</label>
+                    <input [(ngModel)]="edit.first_name" />
+                  </div>
+                  <div>
+                    <label>Apellido</label>
+                    <input [(ngModel)]="edit.last_name" />
+                  </div>
+                  <div>
+                    <label>Teléfono</label>
+                    <input [(ngModel)]="edit.phone" />
+                  </div>
+                  <div>
+                    <label>Email</label>
+                    <input [(ngModel)]="edit.email" type="email" />
+                  </div>
+                  <div>
+                    <label>Plan</label>
+                    <select [(ngModel)]="edit.plan_id">
+                      <option value="">Sin cambiar</option>
+                      <option *ngFor="let p of plans" [value]="p.id">{{ p.name }} — ${{ p.price }}</option>
+                    </select>
+                  </div>
+                  <div class="edit-actions">
+                    <button class="btn sm" (click)="saveEdit(s)">Guardar</button>
+                    <button class="btn ghost sm" (click)="closeEdit()">Cancelar</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="grid two">
     <div class="card">
       <h2>Alta de socio</h2>
@@ -11,7 +114,7 @@
       <input id="ln" [(ngModel)]="user.last_name" placeholder="Torres" />
 
       <label for="ph">Teléfono</label>
-      <input id="ph" [(ngModel)]="user.phone" placeholder="+593999999999" />
+      <input id="ph" [(ngModel)]="user.phone" placeholder="0999999999" maxlength="16" />
 
       <label for="em">Email (opcional)</label>
       <input id="em" [(ngModel)]="user.email" type="email" placeholder="ana@correo.com" />
@@ -26,7 +129,7 @@
 
     <div class="card">
       <h2>Nuevo plan</h2>
-      <p class="muted">Definí precio y duración de la membresía.</p>
+      <p class="muted">Define precio y duración de la membresía.</p>
 
       <label for="pn">Nombre del plan</label>
       <input id="pn" [(ngModel)]="plan.name" placeholder="Mensual full" />
@@ -63,8 +166,8 @@
       <div>
         <label for="mp">Plan</label>
         <select id="mp" [(ngModel)]="mem.plan_id">
-          <option value="">Seleccioná un plan</option>
-          <option *ngFor="let p of plans" [value]="p.id">{{ p.name }} · ${{ p.price }}</option>
+          <option value="">Selecciona un plan</option>
+          <option *ngFor="let p of plans" [value]="p.id">{{ p.name }} — ${{ p.price }}</option>
         </select>
       </div>
       <div>
@@ -73,7 +176,5 @@
       </div>
       <button class="btn" (click)="assign()">Asignar</button>
     </div>
-
-    <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { ApiService, errorMessage } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
@@ -8,12 +8,14 @@ import { AuthService } from '../../core/auth.service';
 @Component({
   selector: 'app-marketplace',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor],
+  imports: [FormsModule, NgIf, NgFor, NgClass],
   templateUrl: './marketplace.html',
   styleUrl: './marketplace.scss',
 })
 export class Marketplace implements OnInit {
   products: any[] = [];
+  orders: any[] = [];
+  loadingOrders = false;
   msg = '';
   isError = false;
   loading = false;
@@ -29,6 +31,7 @@ export class Marketplace implements OnInit {
 
   ngOnInit() {
     this.load();
+    this.loadOrders();
   }
 
   private setMsg(msg: string, isError = false) {
@@ -49,6 +52,31 @@ export class Marketplace implements OnInit {
     }
   }
 
+  async loadOrders() {
+    this.loadingOrders = true;
+    try {
+      const data = await firstValueFrom(this.api.orders(this.order.gym_id));
+      this.orders = data.orders || [];
+    } catch (e: any) {
+      this.setMsg(errorMessage(e), true);
+    } finally {
+      this.loadingOrders = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async setOrderStatus(o: any, status: string) {
+    try {
+      await firstValueFrom(this.api.updateOrderStatus(o.id, status));
+      this.setMsg(status === 'DELIVERED' ? 'Pedido marcado como entregado' : 'Pedido cancelado');
+      await this.loadOrders();
+    } catch (e: any) {
+      this.setMsg(errorMessage(e), true);
+    } finally {
+      this.cdr.detectChanges();
+    }
+  }
+
   async create() {
     try {
       const data = await firstValueFrom(this.api.createProduct(this.prod));
@@ -65,6 +93,7 @@ export class Marketplace implements OnInit {
     try {
       const data = await firstValueFrom(this.api.createOrder(this.order));
       this.setMsg('Pedido creado. Token pickup: ' + (data.order?.token || ''));
+      await this.loadOrders();
     } catch (e: any) {
       this.setMsg(errorMessage(e), true);
     } finally {
@@ -74,6 +103,25 @@ export class Marketplace implements OnInit {
 
   money(value: any): string {
     return Number(value || 0).toLocaleString('es-EC', { style: 'currency', currency: 'USD' });
+  }
+
+  formatDate(value: any): string {
+    if (!value) return '—';
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleString('es-EC', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+    });
+  }
+
+  orderStatusClass(status: string): string {
+    return status === 'DELIVERED' ? 'ok' : status === 'CANCELLED' ? 'bad' : 'warn';
+  }
+
+  orderStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      PENDING: 'Pendiente', DELIVERED: 'Entregado', CANCELLED: 'Cancelado',
+    };
+    return map[status] || status;
   }
 
   categoryLabel(category: string): string {

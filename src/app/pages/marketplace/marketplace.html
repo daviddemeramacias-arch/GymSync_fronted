@@ -1,4 +1,67 @@
 <div class="page">
+  <div class="card">
+    <div class="head">
+      <div>
+        <h2>Compras desde la PWA</h2>
+        <p class="muted">Pedidos reales de los socios, con token de retiro y estado.</p>
+      </div>
+      <div class="head-actions">
+        <span class="badge info">{{ orders.length }} {{ orders.length === 1 ? 'pedido' : 'pedidos' }}</span>
+        <button class="btn ghost sm" (click)="loadOrders()" [disabled]="loadingOrders">
+          {{ loadingOrders ? 'Cargando...' : 'Actualizar' }}
+        </button>
+      </div>
+    </div>
+
+    <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
+
+    <div class="empty" *ngIf="!orders.length && !loadingOrders">
+      <strong>Todavía no hay compras</strong>
+      Cuando un socio compre en la PWA, el pedido aparecerá aquí.
+    </div>
+
+    <div class="table-wrap" *ngIf="orders.length">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Socio</th>
+            <th>Producto</th>
+            <th>Cant.</th>
+            <th>Total</th>
+            <th>Token pickup</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of orders">
+            <td class="nowrap">{{ formatDate(o.created_at) }}</td>
+            <td>
+              <strong>{{ o.first_name || 'Socio' }} {{ o.last_name || '' }}</strong>
+              <small class="sub">{{ o.phone }}</small>
+            </td>
+            <td>{{ o.product_name }}</td>
+            <td>{{ o.quantity }}</td>
+            <td><strong>{{ money(o.total) }}</strong></td>
+            <td class="token">{{ o.pickup_token }}</td>
+            <td>
+              <span class="badge" [ngClass]="orderStatusClass(o.status)">{{ orderStatusLabel(o.status) }}</span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button class="btn secondary sm" (click)="setOrderStatus(o, 'DELIVERED')"
+                        [disabled]="o.status === 'DELIVERED'">Entregado</button>
+                <button class="btn danger sm" (click)="setOrderStatus(o, 'CANCELLED')"
+                        [disabled]="o.status === 'CANCELLED'">Cancelar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="grid two">
     <div class="card">
       <h2>Nuevo producto</h2>
@@ -49,7 +112,6 @@
         <button class="btn secondary" (click)="orderProduct()">Generar pedido</button>
       </div>
 
-      <p class="banner" [class.error]="isError" [class.ok]="!isError" *ngIf="msg">{{ msg }}</p>
     </div>
   </div>
 

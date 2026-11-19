@@ -1,11 +1,74 @@
-.card p.muted { margin: 0 0 4px; font-size: 12.5px; }
+.card p.muted { margin: 0 0 6px; font-size: 12.5px; }
 
 .head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 12px;
 
   h2 { margin: 0; }
+}
+
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.pin {
+  font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--moss);
+}
+
+.link {
+  display: block;
+  margin-top: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.edit-row td {
+  background: rgba(67, 127, 145, .05);
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  align-items: end;
+
+  label { margin-top: 0; }
+}
+
+.edit-actions {
+  display: flex;
+  gap: 6px;
+}
+
+@media (max-width: 720px) {
+  .head { align-items: flex-start; flex-direction: column; }
+  .row-actions { flex-direction: column; }
 }

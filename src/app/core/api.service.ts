@@ -32,6 +32,23 @@ export class ApiService {
   assignMembership(mem: any) {
     return this.http.post<any>(`${this.base}/members/memberships`, mem);
   }
+  socios(gymId?: string) {
+    return this.http.get<any>(`${this.base}/members/socios`, {
+      params: this.params({ gym_id: gymId }),
+    });
+  }
+  updateUser(id: string, data: any) {
+    return this.http.patch<any>(`${this.base}/members/users/${id}`, data);
+  }
+  deactivateUser(id: string) {
+    return this.http.patch<any>(`${this.base}/members/users/${id}/deactivate`, {});
+  }
+  updateMembershipPlan(id: string, plan_id: string) {
+    return this.http.patch<any>(`${this.base}/members/memberships/${id}/plan`, { plan_id });
+  }
+  generatePin(user_id: string) {
+    return this.http.post<any>(`${this.base}/auth/generate-pin`, { user_id });
+  }
 
   // ── M3: Pagos ───────────────────────────────────────────────────
   pendingPayments(gymId?: string) {
@@ -57,6 +74,14 @@ export class ApiService {
   }
   createOrder(order: any) {
     return this.http.post<any>(`${this.base}/marketplace/orders`, order);
+  }
+  orders(gymId?: string) {
+    return this.http.get<any>(`${this.base}/marketplace/orders`, {
+      params: this.params({ gym_id: gymId }),
+    });
+  }
+  updateOrderStatus(id: string, status: string) {
+    return this.http.patch<any>(`${this.base}/marketplace/orders/${id}/status`, { status });
   }
 
   // ── M5: Rutinas ─────────────────────────────────────────────────
