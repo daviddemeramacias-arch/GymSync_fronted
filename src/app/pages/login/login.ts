@@ -36,6 +36,11 @@ export class Login {
     }
   }
 
+  fillDemo() {
+    this.phone = '+593999000001';
+    this.pin = '1234';
+  }
+
   /** Entrada de demostración para revisar la interfaz sin backend levantado. */
   demo() {
     this.auth.setSession('demo-session', {

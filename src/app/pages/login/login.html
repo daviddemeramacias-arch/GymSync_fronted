@@ -25,7 +25,7 @@
 
       <form (ngSubmit)="login()">
         <label for="phone">Teléfono</label>
-        <input id="phone" name="phone" [(ngModel)]="phone" placeholder="+593999999999" autocomplete="username" />
+        <input id="phone" name="phone" [(ngModel)]="phone" placeholder="+593999000001" maxlength="16" autocomplete="username" />
 
         <label for="pin">PIN de 4 dígitos</label>
         <input id="pin" name="pin" [(ngModel)]="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="current-password" />
@@ -36,6 +36,9 @@
       </form>
 
       <p class="msg" *ngIf="msg">{{ msg }}</p>
+
+      <button class="btn ghost block" type="button" (click)="fillDemo()">Usar credenciales demo (owner)</button>
+      <p class="foot" style="margin-top:6px">Demo: +593999000001 · PIN 1234</p>
 
       <div class="divider"><span>o</span></div>
       <button class="btn ghost block" type="button" (click)="demo()">Ver demo del panel (sin backend)</button>

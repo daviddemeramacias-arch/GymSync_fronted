@@ -1,4 +1,4 @@
-const CACHE = 'gymsync-pwa-v2';
+const CACHE = 'gymsync-pwa-v4';
 const ASSETS = [
   './',
   './index.html',

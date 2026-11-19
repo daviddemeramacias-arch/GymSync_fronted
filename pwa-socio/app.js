@@ -248,7 +248,7 @@
 
         <div class="field">
           <label for="phone">Teléfono</label>
-          <input id="phone" type="tel" inputmode="tel" placeholder="+593999999999" autocomplete="username" />
+          <input id="phone" type="tel" inputmode="tel" maxlength="16" placeholder="+593999000002" autocomplete="username" />
         </div>
         <div class="field">
           <label for="pin">PIN de 4 dígitos</label>
@@ -257,7 +257,9 @@
 
         <button class="btn" id="login-btn">Ingresar</button>
         <button class="btn biometric" id="bio-btn" hidden>Desbloquear con biometría</button>
+        <button class="btn ghost" id="fill-demo-btn" style="margin-top:8px">Usar credenciales demo (socio)</button>
 
+        <p class="foot">Demo: +593999000002 · PIN 1234</p>
         <p class="foot">¿No tenés PIN? Pedilo en recepción.</p>
 
         <details>
@@ -273,6 +275,11 @@
 
     const phone = viewEl.querySelector('#phone');
     const pin = viewEl.querySelector('#pin');
+
+    viewEl.querySelector('#fill-demo-btn').addEventListener('click', () => {
+      phone.value = '+593999000002';
+      pin.value = '1234';
+    });
 
     viewEl.querySelector('#login-btn').addEventListener('click', async () => {
       if (!/^\d{4}$/.test(pin.value)) {
@@ -308,7 +315,7 @@
         id: 'demo-member',
         first_name: 'Ana',
         last_name: 'Torres',
-        phone: '+593999999999',
+        phone: '+593999000002',
         role_id: 4,
         gym_id: '00000000-0000-0000-0000-000000000001',
       };
